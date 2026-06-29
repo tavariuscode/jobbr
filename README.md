@@ -65,7 +65,7 @@ jobbr/
 
 1. **Clonar o Repositório:**
 ```bash
-git clone https://github.com
+git remote add origin https://github.com/tavariuscode/jobbr.git
 cd jobbr
 ```
 
