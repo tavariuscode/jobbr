@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # 🗄️ Serviço 1: Banco de Dados Relacional (MySQL)
+  db:
+    image: mysql:8.0
+    container_name: jobbr_mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: jobbr
+      MYSQL_ROOT_PASSWORD: root_password_local
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # 🚀 Serviço 2: Servidor de API (Node.js + Express)
+  backend:
+    build: ./backend
+    container_name: jobbr_backend
+    restart: always
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: root_password_local
+      DB_NAME: jobbr
+    depends_on:
+      - db
+
+  # ⚛️ Serviço 3: Interface do Usuário (React.js)
+  frontend:
+    build: ./frontend
+    container_name: jobbr_frontend
+    restart: always
+    depends_on:
+      - backend
+
+  # 🌐 Serviço 4: Servidor Web e Proxy Reverso (Nginx)
+  nginx:
+    image: nginx:alpine
+    container_name: jobbr_nginx
+    restart: always
+    ports:
+      - "8080:80" # Expõe o projeto inteiro na porta padrão da internet (http://localhost)
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  mysql_data:
