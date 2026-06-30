@@ -1,0 +1,32 @@
+networks:
+  reverse-proxy:
+    external: true
+  internal:
+    driver: bridge
+
+services:
+  db:
+    container_name: jobbr_mysql
+    networks:
+      - internal
+
+  backend:
+    container_name: jobbr_backend
+    networks:
+      - internal
+
+  frontend:
+    container_name: jobbr_frontend
+    networks:
+      - internal
+
+  nginx:
+    container_name: jobbr_nginx
+    networks:
+      - internal
+      - reverse-proxy
+    environment:
+      - VIRTUAL_HOST=${DOCKER_VIRTUAL_HOST}
+      - VIRTUAL_PORT=${DOCKER_VIRTUAL_PORT}
+      - LETSENCRYPT_HOST=${DOCKER_LETSENCRYPT_HOST}
+      - LETSENCRYPT_EMAIL=${DOCKER_LETSENCRYPT_EMAIL}
