@@ -19,9 +19,9 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_SERVER_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
+          ssh-keyscan -H "${{ vars.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Push to server
         run: |
-          git remote add contabo ${{ secrets.DEPLOY_REMOTE }}
+          git remote add contabo ${{ vars.DEPLOY_REMOTE }}
           git push contabo main:main --force
